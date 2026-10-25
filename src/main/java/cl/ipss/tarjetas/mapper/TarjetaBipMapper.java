@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 public class TarjetaBipMapper {
 
     public TarjetaBip aEntidad(CrearTarjetaRequest r) {
-        return TarjetaBip.builder()
-                .numero(r.numero().trim())
-                .titular(r.titular().trim())
-                .alias(limpiar(r.alias()))
-                .tipo(r.tipo())
-                .saldo(r.saldo())
-                .build();
+        TarjetaBip entidad = new TarjetaBip();
+        entidad.setNumero(r.numero().trim());
+        entidad.setTitular(r.titular().trim());
+        entidad.setAlias(limpiar(r.alias()));
+        entidad.setTipo(r.tipo());
+        entidad.setSaldo(r.saldo());
+        return entidad;
     }
 
     /** Copia los datos editables sobre una entidad existente (el número no se toca). */

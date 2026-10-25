@@ -12,23 +12,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-
+/**
+ * ENTITY (el "Model" de MVC): representa la tabla tarjeta_bip.
+ * Java puro: constructor vacío, getters y setters escritos a mano.
+ */
 @Entity
 @Table(name = "tarjeta_bip")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class TarjetaBip {
 
     @Id
@@ -61,6 +54,73 @@ public class TarjetaBip {
     @Column(name = "actualizada_en", nullable = false)
     private LocalDateTime actualizadaEn;
 
+    /** Constructor vacío: JPA lo exige para crear la entidad al leer de la base. */
+    public TarjetaBip() {
+    }
+
+    // ---------- getters ----------
+    public Long getId() {
+        return id;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public String getTitular() {
+        return titular;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public TipoTarjeta getTipo() {
+        return tipo;
+    }
+
+    public BigDecimal getSaldo() {
+        return saldo;
+    }
+
+    public EstadoTarjeta getEstado() {
+        return estado;
+    }
+
+    public LocalDateTime getCreadaEn() {
+        return creadaEn;
+    }
+
+    public LocalDateTime getActualizadaEn() {
+        return actualizadaEn;
+    }
+
+    // ---------- setters (id y fechas los maneja JPA, por eso no tienen) ----------
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public void setTitular(String titular) {
+        this.titular = titular;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public void setTipo(TipoTarjeta tipo) {
+        this.tipo = tipo;
+    }
+
+    public void setSaldo(BigDecimal saldo) {
+        this.saldo = saldo;
+    }
+
+    public void setEstado(EstadoTarjeta estado) {
+        this.estado = estado;
+    }
+
+    /** Se ejecuta automáticamente justo antes del INSERT. */
     @PrePersist
     void antesDeGuardar() {
         LocalDateTime ahora = LocalDateTime.now();
@@ -70,7 +130,8 @@ public class TarjetaBip {
             this.estado = EstadoTarjeta.ACTIVA;
         }
     }
-    
+
+    /** Se ejecuta automáticamente justo antes del UPDATE. */
     @PreUpdate
     void antesDeActualizar() {
         this.actualizadaEn = LocalDateTime.now();

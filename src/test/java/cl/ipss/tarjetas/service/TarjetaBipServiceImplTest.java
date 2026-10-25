@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -54,7 +55,7 @@ class TarjetaBipServiceImplTest {
         when(repository.existsByNumero("12345678")).thenReturn(false);
         when(repository.save(any(TarjetaBip.class))).thenAnswer(inv -> {
             TarjetaBip t = inv.getArgument(0);
-            t.setId(1L);
+            ReflectionTestUtils.setField(t, "id", 1L); // la BD real asigna el id
             t.setEstado(EstadoTarjeta.ACTIVA); // lo hace @PrePersist en la BD real
             return t;
         });
@@ -84,8 +85,12 @@ class TarjetaBipServiceImplTest {
 
     @Test
     void actualizaSinCambiarElNumero() {
-        TarjetaBip existente = TarjetaBip.builder().id(5L).numero("12345678").titular("Ana")
-                .tipo(TipoTarjeta.NORMAL).saldo(BigDecimal.TEN).estado(EstadoTarjeta.ACTIVA).build();
+        TarjetaBip existente = new TarjetaBip();
+        existente.setNumero("12345678");
+        existente.setTitular("Ana");
+        existente.setTipo(TipoTarjeta.NORMAL);
+        existente.setSaldo(BigDecimal.TEN);
+        existente.setEstado(EstadoTarjeta.ACTIVA);
         when(repository.findById(5L)).thenReturn(Optional.of(existente));
         when(repository.save(existente)).thenReturn(existente);
 
